@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import './screens/product_detail.dart';
 import './screens/product_screen.dart';
 import 'providers/products_provider.dart';
+import 'models/cart.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,8 +12,18 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProductsProvider(),
+    return MultiProvider(
+      //can also use ChangeNotifierProvider.value here
+      //but it is recomemnded that if creating a new instance, use create
+      //and if rebuilding is everytime, or in a List/GridView, use .value
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ProductsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cart(),
+        ),
+      ],
       child: MaterialApp(
         theme: ThemeData(
           primaryColor: Colors.indigo,

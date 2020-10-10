@@ -1,3 +1,8 @@
+//import 'package:badges/badges.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/models/cart.dart';
+
+import '../widgets/badge.dart';
 import 'package:flutter/material.dart';
 import '../widgets/products_grid.dart';
 
@@ -13,6 +18,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   bool isFavorite = false;
+  var badgeCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +27,19 @@ class _ProductScreenState extends State<ProductScreen> {
         leading: Icon(Icons.shopping_bag_outlined),
         title: Text('Shop App'),
         actions: [
+          Consumer<Cart>(
+            builder: (_, cartData, child) {
+              return Badge(
+                child: child,
+                value: cartData.itemCount.toString(),
+                color: Colors.red,
+              );
+            },
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+          ),
           PopupMenuButton(
             itemBuilder: (_) => [
               PopupMenuItem(
@@ -42,7 +61,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 }
               });
             },
-          )
+          ),
         ],
       ),
       body: ProductsGrid(isFavorite),
