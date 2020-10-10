@@ -1,36 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/product_detail.dart';
+import 'package:shop_app/models/product.dart';
+import '../screens/product_detail.dart';
+
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final String imageUrl;
-  final String id;
-  final String title;
-  final String description;
+  // final String imageUrl;
+  // final String id;
+  // final String title;
+  // final String description;
 
-  ProductItem(this.id, this.imageUrl, this.description, this.title);
+  // ProductItem(this.id, this.imageUrl, this.description, this.title);
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(ProductDetail.routeName, arguments: id);
+        Navigator.of(context)
+            .pushNamed(ProductDetail.routeName, arguments: product.id);
       },
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(15),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: GridTile(
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black.withOpacity(0.54),
             title: Text(
-              title,
+              product.title,
               textAlign: TextAlign.center,
             ),
-            leading: Icon(Icons.favorite_border),
+            leading: IconButton(
+              icon: Icon(product.isFavorite
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border),
+              onPressed: product.toggleFavorite,
+            ),
             trailing: Icon(Icons.shopping_cart_outlined),
           ),
         ),
