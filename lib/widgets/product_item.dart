@@ -14,7 +14,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
+    final product = Provider.of<Product>(context, listen: false);
     return InkWell(
       onTap: () {
         Navigator.of(context)
@@ -38,11 +38,18 @@ class ProductItem extends StatelessWidget {
               product.title,
               textAlign: TextAlign.center,
             ),
-            leading: IconButton(
-              icon: Icon(product.isFavorite
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border),
-              onPressed: product.toggleFavorite,
+            //we have the set the above listener to false and
+            //the consumer widget always listens.
+            //So only the heart button is listening to changes
+            leading: Consumer<Product>(
+              builder: (context, product, child) {
+                return IconButton(
+                  icon: Icon(product.isFavorite
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border),
+                  onPressed: product.toggleFavorite,
+                );
+              },
             ),
             trailing: Icon(Icons.shopping_cart_outlined),
           ),

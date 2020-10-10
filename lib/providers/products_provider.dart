@@ -13,6 +13,10 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Product> get showFavorites {
+    return _items.where((element) => element.isFavorite).toList();
+  }
+
   Product getItem(String id) =>
       _items.firstWhere((element) => element.id == id);
 }
