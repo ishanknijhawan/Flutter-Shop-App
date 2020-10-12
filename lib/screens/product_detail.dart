@@ -44,6 +44,10 @@ class ProductDetail extends StatelessWidget {
               ),
             ),
           ),
+          Text(
+            '\$${product.price}',
+            style: TextStyle(fontSize: 25),
+          ),
         ],
       ),
     );

@@ -24,6 +24,19 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  double get itemTotal {
+    var total = 0.0;
+    _items.forEach((key, value) {
+      total += value.price * value.quantity;
+    });
+    return total;
+  }
+
+  void deleteItem(String id) {
+    _items.removeWhere((key, value) => value.id == id);
+    notifyListeners();
+  }
+
   void addItem(String productId, double price, String title) {
     if (_items.containsKey(productId)) {
       //increase quantity by 1
@@ -40,10 +53,11 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         productId,
         () => CartItem(
-            id: DateTime.now().toString(),
-            title: title,
-            price: price,
-            quantity: 1),
+          id: DateTime.now().toString(),
+          title: title,
+          price: price,
+          quantity: 1,
+        ),
       );
       notifyListeners();
     }
