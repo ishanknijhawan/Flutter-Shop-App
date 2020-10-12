@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/models/cart.dart';
 import '../widgets/cart_item.dart' as ci;
+import '../providers/orders_provider.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '\cart_screen';
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final order = Provider.of<OrderProvider>(context, listen: false);
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Your Cart'),
       ),
@@ -29,7 +34,7 @@ class CartScreen extends StatelessWidget {
                   Spacer(),
                   Chip(
                     label: Text(
-                      '\$${cart.itemTotal}',
+                      '\$${cart.itemTotal.toStringAsFixed(2)}',
                       style: TextStyle(
                         color:
                             Theme.of(context).primaryTextTheme.headline6.color,
@@ -41,7 +46,13 @@ class CartScreen extends StatelessWidget {
                     width: 10,
                   ),
                   OutlineButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      order.addOrder(
+                        cart.itemTotal,
+                        cart.items.values.toList(),
+                      );
+                      cart.clear();
+                    },
                     child: Text('Place Order'),
                   ),
                 ],

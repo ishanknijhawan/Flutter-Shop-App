@@ -1,6 +1,7 @@
 //import 'package:badges/badges.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/models/cart.dart';
+import '../widgets/main_drawer.dart';
 
 import '../widgets/badge.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,16 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: MainDrawer(),
       appBar: AppBar(
-        leading: Icon(Icons.shopping_bag_outlined),
+        leading: IconButton(
+          icon: Icon(Icons.shopping_bag_outlined),
+          onPressed: () => _scaffoldKey.currentState.openDrawer(),
+        ),
         title: Text('Shop App'),
         actions: [
           Consumer<Cart>(

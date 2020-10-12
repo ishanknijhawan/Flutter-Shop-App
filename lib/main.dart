@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screens/cart_screen.dart';
+
+import './providers/orders_provider.dart';
+import './screens/cart_screen.dart';
 import './screens/product_detail.dart';
 import './screens/product_screen.dart';
 import 'providers/products_provider.dart';
 import 'models/cart.dart';
+import 'providers/orders_provider.dart';
+import './screens/orders_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,6 +28,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -35,8 +42,10 @@ class MyApp extends StatelessWidget {
         title: 'Meals App',
         home: ProductScreen(),
         routes: {
+          //'/': (ctx) => ProductScreen(),
           ProductDetail.routeName: (context) => ProductDetail(),
           CartScreen.routeName: (context) => CartScreen(),
+          OrderScreen.routeName: (context) => OrderScreen(),
         },
       ),
     );

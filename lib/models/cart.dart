@@ -24,6 +24,11 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  void clear() {
+    _items = {};
+    notifyListeners();
+  }
+
   double get itemTotal {
     var total = 0.0;
     _items.forEach((key, value) {
