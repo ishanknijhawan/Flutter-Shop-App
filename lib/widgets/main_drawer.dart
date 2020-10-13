@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/user_product_screen.dart';
 import '../screens/orders_screen.dart';
 
 class MainDrawer extends StatelessWidget {
+  Widget buildListTile(
+      BuildContext context, String routeName, IconData icon, String content) {
+    return ListTile(
+      onTap: () => Navigator.of(context).pushReplacementNamed(routeName),
+      leading: Icon(
+        icon,
+        size: 25,
+      ),
+      title: Text(
+        content,
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -22,29 +38,13 @@ class MainDrawer extends StatelessWidget {
               ),
             ),
           ),
-          ListTile(
-            onTap: () => Navigator.of(context).pushReplacementNamed('/'),
-            leading: Icon(
-              Icons.shop_outlined,
-              size: 25,
-            ),
-            title: Text(
-              'Home',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          ListTile(
-            onTap: () => Navigator.of(context)
-                .pushReplacementNamed(OrderScreen.routeName),
-            leading: Icon(
-              Icons.monetization_on_outlined,
-              size: 25,
-            ),
-            title: Text(
-              'My Orders',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
+          buildListTile(context, '/', Icons.shop_outlined, 'Home'),
+          Divider(),
+          buildListTile(context, OrderScreen.routeName,
+              Icons.monetization_on_outlined, 'My Orders'),
+          Divider(),
+          buildListTile(context, UserProductScreen.routeName,
+              Icons.edit_outlined, 'Manage Products'),
         ],
       ),
     );

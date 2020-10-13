@@ -19,21 +19,32 @@ class CartItem extends StatelessWidget {
     return Dismissible(
       onDismissed: (direction) {
         cart.deleteItem(id);
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 2),
-            content: Row(
-              children: [
-                Icon(Icons.shopping_cart_outlined),
-                SizedBox(
-                  width: 20,
-                ),
-                Text('Item added to cart'),
-              ],
-            ),
-          ),
-        );
+      },
+      confirmDismiss: (direction) {
+        return showDialog(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: Text('Delete dish'),
+                content: Text('Do you want to delete this dish temporarily ?'),
+                actions: [
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(false);
+                    },
+                    child: Text('No'),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop(true);
+                      cart.deleteItem(id);
+                    },
+                    child: Text('Yes'),
+                  ),
+                ],
+              );
+            },
+            barrierDismissible: false);
       },
       direction: DismissDirection.startToEnd,
       key: ValueKey(id),
