@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
   @required
@@ -21,8 +23,22 @@ class Product with ChangeNotifier {
       this.title,
       this.isFavorite = false});
 
-  void toggleFavorite() {
+  Future<void> toggleFavorite() async {
+    final url = 'https://boycottchina-b2cc6.firebaseio.com/products/$id.json';
     isFavorite = !isFavorite;
+    await http.patch(
+      url,
+      body: json.encode(
+        {
+          'title': title,
+          'id': id,
+          'isFavorite': isFavorite,
+          'price': price,
+          'description': description,
+          'imageUrl': imageUrl,
+        },
+      ),
+    );
     notifyListeners();
   }
 }

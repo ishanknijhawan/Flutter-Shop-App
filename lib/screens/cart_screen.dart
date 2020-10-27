@@ -46,8 +46,8 @@ class CartScreen extends StatelessWidget {
                     width: 10,
                   ),
                   OutlineButton(
-                    onPressed: () {
-                      order.addOrder(
+                    onPressed: () async {
+                      await order.addOrder(
                         cart.itemTotal,
                         cart.items.values.toList(),
                       );

@@ -46,6 +46,7 @@ class UserProductItem extends StatelessWidget {
                   color: Colors.red,
                 ),
                 onPressed: () {
+                  final scaffold = Scaffold.of(context);
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -75,9 +76,21 @@ class UserProductItem extends StatelessWidget {
                           ),
                           RaisedButton(
                             color: Theme.of(context).primaryColor,
-                            onPressed: () {
+                            onPressed: () async {
                               Navigator.of(context).pop();
-                              productData.deleteProduct(id);
+                              try {
+                                await productData
+                                    .deleteProductUsingAsyncAwait(id);
+                              } catch (error) {
+                                scaffold.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Delete failed!',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Text(
                               'Yes',

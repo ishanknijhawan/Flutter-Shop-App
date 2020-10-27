@@ -1,11 +1,12 @@
 //import 'package:badges/badges.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+
 import 'package:shop_app/models/cart.dart';
 import '../widgets/main_drawer.dart';
-
 import '../widgets/badge.dart';
-import 'package:flutter/material.dart';
 import '../widgets/products_grid.dart';
+import '../providers/products_provider.dart';
 import 'cart_screen.dart';
 
 enum menuItems {
@@ -21,6 +22,34 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   bool isFavorite = false;
   var badgeCount = 0;
+  bool isInit = true;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    //you can only use like this iff you set listen as false
+    //Provider.of<ProductsProvider>(context, listen: false).getProducts();
+
+    //if you want to set listen to true, use the following method
+    // Future.delayed(Duration.zero).then((value) {
+    //   Provider.of<ProductsProvider>(context).getProducts();
+    // });
+    super.initState();
+  }
+
+  //or you can use like this
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      Provider.of<ProductsProvider>(context).getProducts().then((value) {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
+    isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +104,11 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ],
       ),
-      body: ProductsGrid(isFavorite),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(isFavorite),
     );
   }
 }

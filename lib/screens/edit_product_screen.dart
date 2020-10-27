@@ -67,37 +67,37 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.didChangeDependencies();
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final _isValid = formKey.currentState.validate();
     if (!_isValid) {
       return;
     }
     formKey.currentState.save();
-    Provider.of<ProductsProvider>(context, listen: false)
-        .addProduct(editedProduct)
-        .catchError((error) {
-      return showDialog<Null>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Error!'),
-              content: Text('Something went wrong'),
-              actions: [
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          });
-    }).then(
-      (_) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.of(context).pop();
-      },
-    );
+    try {
+      await Provider.of<ProductsProvider>(context, listen: false)
+          .addProductViaAsyncAwait(editedProduct);
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error!'),
+            content: Text('Something went wrong'),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.of(context).pop();
+    }
   }
 
   void _updateImageUrl() {
