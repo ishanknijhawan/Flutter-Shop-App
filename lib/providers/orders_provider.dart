@@ -18,8 +18,41 @@ class OrderProvider with ChangeNotifier {
     return [..._items];
   }
 
+  Future<void> getOrders() async {
+    const url = 'https://boycottchina-b2cc6.firebaseio.com/orders.json';
+    final response = await http.get(url);
+    List<Order> loadedOrders = [];
+    final extractedOrders = json.decode(response.body) as Map<String, dynamic>;
+
+    if (extractedOrders == null) {
+      return;
+    }
+
+    extractedOrders.forEach((orderId, order) {
+      loadedOrders.add(
+        Order(
+          id: orderId,
+          amount: order['amount'],
+          dateTime: DateTime.parse(order['dateTime']),
+          products: (order['products'] as List<dynamic>)
+              .map(
+                (item) => CartItem(
+                  id: item['id'],
+                  price: item['price'],
+                  quantity: item['quantity'],
+                  title: item['title'],
+                ),
+              )
+              .toList(),
+        ),
+      );
+    });
+    _items = loadedOrders.reversed.toList();
+    notifyListeners();
+  }
+
   Future<void> addOrder(double amount, List<CartItem> products) async {
-    final url = 'https://boycottchina-b2cc6.firebaseio.com/orders.json';
+    const url = 'https://boycottchina-b2cc6.firebaseio.com/orders.json';
     final timeStamp = DateTime.now();
     final response = await http.post(
       url,
